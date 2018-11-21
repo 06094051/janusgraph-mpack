@@ -1,0 +1,40 @@
+{
+  "type": "full-release",
+  "name": "janusgraph-ambari-mpack",
+  "version": "0.2.2",
+  "description": "Ambari Management Pack for Janusgraph",
+  "prerequisites": {
+    "min-ambari-version": "2.6.0.0",
+    "min-stack-versions": [
+      {
+        "stack_name": "HDP",
+        "stack_version": "2.6"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "name": "JANUSGRAPH-common-services",
+      "type" : "service-definitions",
+      "source_dir" : "common-services"
+    },
+    {
+      "name" : "JANUSGRAPH-addon-services",
+      "type" : "stack-addon-service-definitions",
+      "source_dir": "addon-services",
+      "service_versions_map": [
+        {
+          "service_name" : "JANUSGRAPH",
+          "service_version" : "0.2.2",
+          "applicable_stacks" : [
+            {
+              "stack_name" : "HDP",
+              "stack_version" : "2.6"
+            }
+
+          ]
+        }
+      ]
+    }
+  ]
+}
