@@ -33,6 +33,7 @@ class JanusGraphServer(Script):
   def install(self, env):
     import params
     env.set_params(params)
+    self.install_packages(env)
 
     Directory([params.janusgraph_log_dir, params.janusgraph_install_dir],
             owner=params.janusgraph_user,

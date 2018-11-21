@@ -51,7 +51,7 @@ class JanusGraphServiceCheckDefault(JanusGraphServiceCheck):
                   user=params.smokeuser
                   )
 
-	    secure=""
+	      secure=""
       if params.janusgraph_server_ssl == "true" :
         secure="-k"
         if params.janusgraph_server_ssl_key_cert_file:
