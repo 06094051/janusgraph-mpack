@@ -136,10 +136,18 @@
       </components>
       <osSpecifics>
         <osSpecific>
-          <osFamily>any</osFamily>
+          <osFamily>redhat7</osFamily>
           <packages>
             <package>
-              <name>janusgraph-0.2.2</name>
+              <name>janusgraph</name>
+            </package>
+          </packages>
+        </osSpecific>
+        <osSpecific>
+          <osFamily>redhat6</osFamily>
+          <packages>
+            <package>
+              <name>janusgraph</name>
             </package>
           </packages>
         </osSpecific>
