@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.janusgraph.ambari</groupId>
     <artifactId>janusgraph_mpack</artifactId>
-    <version>0.2.2</version>
+    <version>0.3.1</version>
     <name>Janusgraph Ambari Management Pack</name>
 
     <dependencies>
@@ -81,6 +81,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>s3-upload-maven-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <bucketName>metron-janus</bucketName>
+                    <source>target/janusgraph_mpack-${version}.tar.gz</source>
+                    <destination>janusgraph_mpack-${version}.tar.gz</destination>
+                </configuration>
             </plugin>
         </plugins>
     </build>
