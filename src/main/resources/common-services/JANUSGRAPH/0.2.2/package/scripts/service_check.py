@@ -35,56 +35,55 @@ class JanusGraphServiceCheck(Script):
 
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class JanusGraphServiceCheckDefault(JanusGraphServiceCheck):
-    def service_check(self, env):
-      import params
-      env.set_params(params)
+  def service_check(self, env):
+    import params
+    env.set_params(params)
 
-      File( format("{tmp_dir}/janusgraphSmoke.groovy"),
-            content = StaticFile("janusgraphSmoke.groovy"),
-            mode = 0755
+    File( format("{tmp_dir}/janusgraphSmoke.groovy"),
+          content = StaticFile("janusgraphSmoke.groovy"),
+          mode = 0755
+          )
+
+
+    if params.security_enabled:
+      kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal};")
+      Execute(kinit_cmd,
+              user=params.smokeuser
+              )
+    secure=""
+    if params.janusgraph_server_ssl == "true" :
+      secure="-k"
+    if params.janusgraph_server_ssl_key_cert_file:
+      secure="--cacert " + params.janusgraph_server_ssl_key_cert_file.split(":")[1]
+      grepresult=""" | grep 99"""
+    if len(params.janusgraph_server_simple_authenticator) > 0:
+      grepresult = ""
+    
+    headers=""" -XPOST -Hcontent-type:application/json -d '{"gremlin":"100-1"}' """
+    http="http://"
+    if params.janusgraph_server_ssl == "true":
+      http="https://"
+  
+    janusgraph_server_host = http + format("{janusgraph_host}")
+    janusgraph_port=format("{janusgraph_server_port}")
+    cmd = "curl " + secure + headers + janusgraph_server_host + ":" + janusgraph_port + grepresult
+    gremlin_bin = params.janusgraph_bin_dir + "/gremlin.sh"
+
+    Execute((cmd),
+            tries     = 40,
+            try_sleep = 5,
+            path      = format('{janusgraph_bin_dir}:/usr/sbin:/sbin:/usr/local/bin:/bin:/usr/bin'),
+            user      = params.smokeuser,
+            logoutput = True
             )
 
-
-      if params.security_enabled:
-          kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal};")
-          Execute(kinit_cmd,
-                  user=params.smokeuser
-                  )
-
-	      secure=""
-      if params.janusgraph_server_ssl == "true" :
-        secure="-k"
-        if params.janusgraph_server_ssl_key_cert_file:
-          secure="--cacert " + params.janusgraph_server_ssl_key_cert_file.split(":")[1]
-          grepresult=""" | grep 99"""
-        if len(params.janusgraph_server_simple_authenticator) > 0:
-          grepresult = ""
-      
-      headers=""" -XPOST -Hcontent-type:application/json -d '{"gremlin":"100-1"}' """
-      http="http://"
-      if params.janusgraph_server_ssl == "true":
-          http="https://"
-   
-      janusgraph_server_host = http + format("{janusgraph_host}")
-      janusgraph_port=format("{janusgraph_server_port}")
-      cmd = "curl " + secure + headers + janusgraph_server_host + ":" + janusgraph_port + grepresult
-      gremlin_bin = params.janusgraph_bin_dir + "/gremlin.sh"
-
-      Execute((cmd),
-              tries     = 40,
-              try_sleep = 5,
-              path      = format('{janusgraph_bin_dir}:/usr/sbin:/sbin:/usr/local/bin:/bin:/usr/bin'),
-              user      = params.smokeuser,
-              logoutput = True
-              )
-
-      Execute(format("{gremlin_bin} {tmp_dir}/janusgraphSmoke.groovy"),
-              tries     = 3,
-              try_sleep = 5,
-              path      = format('{janusgraph_bin_dir}:/usr/sbin:/sbin:/usr/local/bin:/bin:/usr/bin'),
-              user      = params.smokeuser,
-              logoutput = True
-              )
+    Execute(format("{gremlin_bin} {tmp_dir}/janusgraphSmoke.groovy"),
+            tries     = 3,
+            try_sleep = 5,
+            path      = format('{janusgraph_bin_dir}:/usr/sbin:/sbin:/usr/local/bin:/bin:/usr/bin'),
+            user      = params.smokeuser,
+            logoutput = True
+            )
 
 if __name__ == "__main__":
   # print "Track service check status"
