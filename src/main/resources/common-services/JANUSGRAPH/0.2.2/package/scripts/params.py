@@ -43,7 +43,7 @@ full_stack_version = get_stack_version('spark2-client')
 # New Cluster Stack Version that is defined during the RESTART of a Rolling Upgrade
 version = default("/commandParams/version", None)
 
-janusgraph_install_dir = '/usr/janusgraph/0.2.2/'
+janusgraph_install_dir = '/usr/janusgraph/' + version
 
 janusgraph_user = config['configurations']['janusgraph-env']['janusgraph_user']
 janusgraph_group = config['configurations']['janusgraph-env']['janusgraph_group']
