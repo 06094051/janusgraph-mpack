@@ -24,12 +24,10 @@
   <property>
     <name>content</name>
     <description>Configuration for JanusGraph Server</description>
-    <value>
-host: {{janusgraph_host}}
+    <value>host: {{janusgraph_host}}
 port: {{janusgraph_server_port}}
 scriptEvaluationTimeout: 300000
 serializedResponseTimeout: 300000
-<!-- channelizer: org.apache.tinkerpop.gremlin.server.channel.WebSocketChannelizer -->
 channelizer: org.apache.tinkerpop.gremlin.server.channel.WsAndHttpChannelizer
 graphs: {
   graph: conf/janusgraph-hbase-solr.properties,
