@@ -19,6 +19,8 @@ Ambari Agent
 
 """
 
+import re
+
 from resource_management.libraries.script.script import Script
 from resource_management.libraries.resources.hdfs_resource import HdfsResource
 from resource_management.libraries.functions import conf_select
@@ -35,13 +37,17 @@ stack_root= Script.get_stack_root()
 
 stack_name = default("/hostLevelParams/stack_name", None)
 
+
 stack_version_unformatted = str(config['hostLevelParams']['stack_version'])
 stack_version_formatted = format_stack_version(stack_version_unformatted)
 major_stack_version = get_major_version(stack_version_formatted)
 full_stack_version = get_stack_version('spark2-client')
 
-# New Cluster Stack Version that is defined during the RESTART of a Rolling Upgrade
-version = default("/commandParams/version", None)
+repository_ids = [repository['repoId'] for repository in config['repositoryFile']['repositories']]
+for r in repository_ids:
+  m = re.search('janusgraph-(\d*\.\d*.\d*)-.*', r)
+  if m:
+    version = m.group(1)
 
 janusgraph_install_dir = '/usr/janusgraph/' + version
 

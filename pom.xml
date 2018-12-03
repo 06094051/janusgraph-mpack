@@ -88,8 +88,8 @@
                 <version>1.2</version>
                 <configuration>
                     <bucketName>metron-janus</bucketName>
-                    <source>target/janusgraph_mpack-${version}.tar.gz</source>
-                    <destination>janusgraph_mpack-${version}.tar.gz</destination>
+                    <source>target/janusgraph_mpack-${project.version}.tar.gz</source>
+                    <destination>janusgraph_mpack-${project.version}.tar.gz</destination>
                 </configuration>
             </plugin>
         </plugins>
